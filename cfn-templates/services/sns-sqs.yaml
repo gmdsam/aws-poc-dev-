@@ -11,6 +11,9 @@ Resources:
 
   MySQSQueue:
     Type: AWS::SQS::Queue
+    Properties:
+      QueueName: 'PoCSQS'
+    
 
   MyTopicSubscription:
     Type: AWS::SNS::Subscription
