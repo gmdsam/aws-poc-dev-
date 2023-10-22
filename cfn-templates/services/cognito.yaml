@@ -17,8 +17,8 @@ Resources:
           RequireLowercase: true
           RequireNumbers: true
           RequireSymbols: true
-      LambdaConfig:
-        AfterConfirmation: !Ref StoreUserDetailsFunction
+      # LambdaConfig:
+      #   AfterConfirmation: !Ref StoreUserDetailsFunction
 
   StoreUserDetailsFunction:
     Type: "AWS::Lambda::Function"
