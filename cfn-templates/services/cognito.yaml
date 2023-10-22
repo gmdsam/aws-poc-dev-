@@ -6,7 +6,19 @@ Resources:
   MyCognitoUserPool:
     Type: "AWS::Cognito::UserPool"
     Properties:
-    # UserPool configurations go here...
+      UserPoolName: MyUserPool
+      MfaConfiguration: OFF
+      UsernameAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+      LambdaConfig:
+        AfterConfirmation: !Ref StoreUserDetailsFunction
 
   StoreUserDetailsFunction:
     Type: "AWS::Lambda::Function"
@@ -46,11 +58,3 @@ Resources:
                   - rds:ExecuteStatement
                   - secretsmanager:GetSecretValue
                 Resource: "*"
-
-  CognitoLambdaTrigger:
-    Type: "AWS::Cognito::UserPoolTrigger"
-    Properties:
-      AfterConfirmation:
-        Ref: StoreUserDetailsFunction
-      UserPoolId:
-        Ref: MyCognitoUserPool
