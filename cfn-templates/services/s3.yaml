@@ -33,7 +33,7 @@ Resources:
     Type: AWS::SQS::QueuePolicy
     Properties:
       Queues:
-        - !Sub arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:${SQSName}
+        - !Sub https://sqs:${AWS::Region}.amazonaws.com/${AWS::AccountId}/${SQSName}
       PolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -41,9 +41,6 @@ Resources:
             Principal: "*"
             Action: sqs:SendMessage
             Resource: !Sub arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:${SQSName}
-            Condition:
-              ArnEquals:
-                aws:SourceArn: !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${SNSName}
 
 Outputs:
   BucketName:
