@@ -11,6 +11,7 @@ Parameters:
     Description: The database admin password
     Type: String
     NoEcho: true
+    Default: hardcoded_password
 
 Resources:
 
@@ -26,7 +27,7 @@ Resources:
     DeletionPolicy: Snapshot
     Properties:
       AllocatedStorage: '20'
-      DBInstanceClass: 'db.t2.micro'
+      DBInstanceClass: 'db.t3.micro'
       Engine: 'mysql'
       MasterUsername: !Ref DBUsername
       MasterUserPassword: !Ref DBPassword
@@ -42,8 +43,9 @@ Resources:
     Properties:
       DBSubnetGroupDescription: Subnet group for CognitoUserDB
       SubnetIds:
-        - subnet-019fd83847dcd8cb2  # Replace with your subnet IDs
-        - subnet-081a0a52854c4f7be
+        - subnet-05a0a95890869bb7c  # Replace with your subnet IDs
+        - subnet-03fb4282ee13c34fd
+        - subnet-0f163bb5311049426
 
   DBSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
