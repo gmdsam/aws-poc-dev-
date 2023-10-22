@@ -23,13 +23,13 @@ Resources:
   StoreUserDetailsFunction:
     Type: "AWS::Lambda::Function"
     Properties:
-      Handler: "index.handler"
+      Handler: "handler"
       Role: !GetAtt LambdaExecutionRole.Arn
       FunctionName: StoreUserDetailsFunction
       Runtime: python3.8
       Code:
-        S3Bucket: "YourS3BucketName"
-        S3Key: "path-to-your-lambda-code.zip"
+        S3Bucket: "aws-dev-poc-bucket-stockholm"
+        S3Key: "aws-associate-dev-poc/src/build/function1.zip"
 
   LambdaExecutionRole:
     Type: "AWS::IAM::Role"
