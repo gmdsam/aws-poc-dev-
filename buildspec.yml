@@ -16,8 +16,8 @@ phases:
   build:
     commands:
       - echo "Packaging Lambda functions..."
-      # - cd src/lambda-functions/function1/
-      # - zip -r9 ../../build/function1.zip .
+      - cd src/lambda-functions/function1/
+      - zip -r9 ../../build/function1.zip .
       # - cd ../function2/
       # - zip -r9 ../../build/function2.zip .
       # - cd ../function3/
@@ -25,4 +25,4 @@ phases:
 
 artifacts:
   files:
-    - build/*.zip
+    - src/build/*.zip
