@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: DynamoDB table for storing S3 file metadata
+
+Resources:
+
+  S3MetadataDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: S3FileMetadata
+      AttributeDefinitions:
+        - AttributeName: fileId
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: N
+      KeySchema:
+        - AttributeName: fileId
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+
+Outputs:
+  TableName:
+    Description: "DynamoDB Table Name"
+    Value: !Ref S3MetadataDynamoDBTable
+  TableArn:
+    Description: "Table ARN"
+    Value: !GetAtt S3MetadataDynamoDBTable.Arn

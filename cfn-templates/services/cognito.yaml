@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Cognito setup with a Lambda trigger for user sign-ups
+
+Resources:
+
+  MyCognitoUserPool:
+    Type: "AWS::Cognito::UserPool"
+    Properties:
+    # UserPool configurations go here...
+
+  StoreUserDetailsFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: "index.handler"
+      Role: !GetAtt LambdaExecutionRole.Arn
+      FunctionName: StoreUserDetailsFunction
+      Runtime: python3.8
+      Code:
+        S3Bucket: "YourS3BucketName"
+        S3Key: "path-to-your-lambda-code.zip"
+
+  LambdaExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: "LambdaAccessToRDSAndLogs"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "arn:aws:logs:*:*:*"
+              - Effect: Allow
+                Action:
+                  - rds:DescribeDBInstances
+                  - rds:ExecuteStatement
+                  - secretsmanager:GetSecretValue
+                Resource: "*"
+
+  CognitoLambdaTrigger:
+    Type: "AWS::Cognito::UserPoolTrigger"
+    Properties:
+      AfterConfirmation:
+        Ref: StoreUserDetailsFunction
+      UserPoolId:
+        Ref: MyCognitoUserPool

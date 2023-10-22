@@ -1,0 +1,69 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: S3 bucket for storing uploaded files and lifecycle configuration
+
+Resources:
+
+  UploadedFilesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: uploaded-files-bucket-uniqueid   # Make sure to provide a unique name
+      NotificationConfiguration:
+        TopicConfigurations:
+          - Event: s3:ObjectCreated:*
+            Topic: !Ref S3NotificationTopic
+
+  S3NotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Protocol: sqs
+          Endpoint: !GetAtt S3NotificationQueue.Arn
+
+  S3NotificationQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: S3NotificationQueue
+
+  SQSQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref S3NotificationQueue
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: sqs:SendMessage
+            Resource: !GetAtt S3NotificationQueue.Arn
+            Condition:
+              ArnEquals:
+                aws:SourceArn: !Ref S3NotificationTopic
+
+  BucketLifecycleConfiguration:
+    Type: AWS::S3::BucketLifecycleConfiguration
+    Properties:
+      Bucket: !Ref UploadedFilesBucket
+      Rules:
+        - Id: MoveToInfrequentAccess
+          Status: Enabled
+          Transition:
+            Days: 30
+            StorageClass: INTELLIGENT_TIERING
+
+Outputs:
+  BucketName:
+    Description: "S3 Bucket Name"
+    Value: !Ref UploadedFilesBucket
+  BucketARN:
+    Description: "Bucket ARN"
+    Value: !GetAtt UploadedFilesBucket.Arn
+  SNSARN:
+    Description: "SNS Topic ARN"
+    Value: !Ref S3NotificationTopic
+  SQSURL:
+    Description: "SQS Queue URL"
+    Value: !Ref S3NotificationQueue
+  SQSARN:
+    Description: "SQS Queue ARN"
+    Value: !GetAtt S3NotificationQueue.Arn

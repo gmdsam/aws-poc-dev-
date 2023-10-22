@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Amazon API Gateway with Lambda Integrations for PUT and GET methods
+
+Resources:
+
+  MyApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: "MyApi"
+      Description: "API Gateway with Lambda Integrations for PUT and GET"
+      FailOnWarnings: "FALSE"
+
+  PutMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: PUT
+      ResourceId: !GetAtt MyApi.RootResourceId
+      RestApiId: !Ref MyApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${PutLambdaFunction.Arn}/invocations
+
+  GetMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      ResourceId: !GetAtt MyApi.RootResourceId
+      RestApiId: !Ref MyApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetLambdaFunction.Arn}/invocations
+
+  MyApiDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn: [PutMethod, GetMethod]
+    Properties:
+      RestApiId: !Ref MyApi
+
+  MyApiStage:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      StageName: prod
+      DeploymentId: !Ref MyApiDeployment
+      RestApiId: !Ref MyApi
+
+  PutLambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: "put.handler"
+      Role: !GetAtt LambdaExecutionRole.Arn
+      FunctionName: PutLambdaFunction
+      Runtime: python3.8
+      Code:
+        S3Bucket: "YourS3BucketName"
+        S3Key: "path-to-your-put-lambda-code.zip"
+
+  GetLambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Handler: "get.handler"
+      Role: !GetAtt LambdaExecutionRole.Arn
+      FunctionName: GetLambdaFunction
+      Runtime: python3.8
+      Code:
+        S3Bucket: "YourS3BucketName"
+        S3Key: "path-to-your-get-lambda-code.zip"
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaInvokePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - s3:PutObject
+                  - dynamodb:GetItem
+                Resource: "*"

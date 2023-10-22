@@ -1,0 +1,99 @@
+Resources:
+  MyPipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Type: S3
+        Location: aws-dev-poc-artc-bucket
+      RoleArn: arn:aws:iam::account-id:role/role-name  # Replace with your role ARN
+      Stages:
+        - Name: DevSource
+          Actions:
+            - Name: SourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                Owner: YourGitHubUsername  # Replace with your GitHub username or org name
+                Repo: aws-dev-poc-
+                Branch: dev
+                OAuthToken: !Ref GitHubToken
+
+        - Name: DevBuildAndDeploy
+          Actions:
+            - Name: BuildAction
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              InputArtifacts:
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: BuildOutput
+              Configuration:
+                ProjectName: MyCodeBuildProject
+            - Name: DeployAction
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              InputArtifacts:
+                - Name: BuildOutput
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                StackName: MyCFNDevStack
+                TemplatePath: BuildOutput::master-stack.yaml  # Reference to the master stack
+
+        - Name: ProdSource
+          Actions:
+            - Name: SourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: ThirdParty
+                Provider: GitHub
+                Version: 1
+              OutputArtifacts:
+                - Name: SourceOutput
+              Configuration:
+                Owner: YourGitHubUsername
+                Repo: aws-dev-poc-
+                Branch: master
+                OAuthToken: !Ref GitHubToken
+
+        - Name: ProdBuildAndDeploy
+          Actions:
+            - Name: BuildAction
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Provider: CodeBuild
+                Version: 1
+              InputArtifacts:
+                - Name: SourceOutput
+              OutputArtifacts:
+                - Name: BuildOutput
+              Configuration:
+                ProjectName: MyCodeBuildProject
+            - Name: DeployAction
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: CloudFormation
+                Version: 1
+              InputArtifacts:
+                - Name: BuildOutput
+              Configuration:
+                ActionMode: CREATE_UPDATE
+                StackName: MyCFNProdStack
+                TemplatePath: BuildOutput::master-stack.yaml  # Reference to the master stack
+
+Outputs:
+  PipelineUrl:
+    Description: "Pipeline URL"
+    Value: !Sub "https://console.aws.amazon.com/codepipeline/home?region=${AWS::Region}#/view/${MyPipeline}"
