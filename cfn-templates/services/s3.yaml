@@ -26,7 +26,7 @@ Resources:
           - Id: MoveToInfrequentAccess
             Status: Enabled
             Transitions:
-              - Days: 1
+              - TransitionInDays: 1
                 StorageClass: INTELLIGENT_TIERING
 
   SQSQueuePolicy:
