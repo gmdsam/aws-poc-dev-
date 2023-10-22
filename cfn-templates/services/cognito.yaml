@@ -3,11 +3,11 @@ Description: Cognito setup with a Lambda trigger for user sign-ups
 
 Resources:
 
+
   MyCognitoUserPool:
     Type: "AWS::Cognito::UserPool"
     Properties:
       UserPoolName: MyUserPool
-      MfaConfiguration: OFF
       UsernameAttributes:
         - email
       Policies:
