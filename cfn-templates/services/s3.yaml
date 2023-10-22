@@ -10,7 +10,7 @@ Parameters:
   SQSName:
     Description: "Name for the SQS Queue"
     Type: String
-    Default: "AwsDevPocStack-SnsSqsStack-SNE0FAAFW4H-MySQSQueue-s35JUNpKdGgT"
+    Default: "PoCSQS"
 
 Resources:
   UploadedFilesBucket:
