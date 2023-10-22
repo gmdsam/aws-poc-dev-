@@ -6,25 +6,25 @@ Resources:
   #   Properties:
   #     TemplateURL: 's3://your-template-bucket-path/cognito.yaml'
 
-  # ApiStack:
-  #   Type: AWS::CloudFormation::Stack
-  #   Properties:
-  #     TemplateURL: 's3://your-template-bucket-path/api.yaml'
+  ApiStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://aws-dev-poc-bucket-stockholm.s3.eu-north-1.amazonaws.com/aws-associate-dev-poc/cfn-templates/services/api.yaml
 
-  # S3Stack:
-  #   Type: AWS::CloudFormation::Stack
-  #   Properties:
-  #     TemplateURL: 's3://your-template-bucket-path/s3.yaml'
+  S3Stack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://aws-dev-poc-bucket-stockholm.s3.eu-north-1.amazonaws.com/aws-associate-dev-poc/cfn-templates/services/s3.yaml
 
-  # SnsSqsStack:
-  #   Type: AWS::CloudFormation::Stack
-  #   Properties:
-  #     TemplateURL: 's3://your-template-bucket-path/sns-sqs.yaml'
+  SnsSqsStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://aws-dev-poc-bucket-stockholm.s3.eu-north-1.amazonaws.com/aws-associate-dev-poc/cfn-templates/services/sns-sqs.yaml
 
-  # DynamoDBStack:
-  #   Type: AWS::CloudFormation::Stack
-  #   Properties:
-  #     TemplateURL: 's3://your-template-bucket-path/dynamodb.yaml'
+  DynamoDBStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://aws-dev-poc-bucket-stockholm.s3.eu-north-1.amazonaws.com/aws-associate-dev-poc/cfn-templates/services/dynamodb.yaml
 
   RDSStack:
     Type: AWS::CloudFormation::Stack

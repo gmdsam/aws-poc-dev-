@@ -1,6 +1,18 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: RDS setup inside a VPC and storing connection credentials in Secrets Manager
 
+Parameters:
+  DBUsername:
+    Description: The database admin username
+    Type: String
+    Default: admin
+
+  DBPassword:
+    Description: The database admin password
+    Type: String
+    NoEcho: true
+    Default: hardcoded_password
+
 Resources:
 
   CognitoUserDBSecret:
@@ -18,7 +30,7 @@ Resources:
     Type: 'AWS::RDS::DBInstance'
     Properties:
       AllocatedStorage: '20'
-      DBInstanceClass: 'db.t2.micro'
+      DBInstanceClass: 'db.t3.micro'
       Engine: 'mysql'
       MasterUsername: !Sub '{{resolve:secretsmanager:${CognitoUserDBSecret}:SecretString:username}}'
       MasterUserPassword: !Sub '{{resolve:secretsmanager:${CognitoUserDBSecret}:SecretString:password}}'
@@ -34,8 +46,9 @@ Resources:
     Properties:
       DBSubnetGroupDescription: Subnet group for CognitoUserDB
       SubnetIds:
-        - subnet-019fd83847dcd8cb2  # Replace with your subnet IDs
-        - subnet-081a0a52854c4f7be
+        - subnet-05a0a95890869bb7c  # Replace with your subnet IDs
+        - subnet-03fb4282ee13c34fd
+        - subnet-0f163bb5311049426
 
   DBSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'

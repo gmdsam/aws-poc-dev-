@@ -10,13 +10,13 @@ Parameters:
   SQSName:
     Description: "Name for the SQS Queue"
     Type: String
-    Default: "test-sqs-sns-MySQSQueue-Eh5xfcLXYOuU"
+    Default: "PoCSQS"
 
 Resources:
   UploadedFilesBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: uploaded-files-bucket-1234  # Make sure to provide a unique name
+      BucketName: aws-dev-poc-bucket-stockholm-134  # Make sure to provide a unique name
       NotificationConfiguration:
         TopicConfigurations:
           - Event: s3:ObjectCreated:*
@@ -26,7 +26,7 @@ Resources:
           - Id: MoveToInfrequentAccess
             Status: Enabled
             Transitions:
-              - Days: 30
+              - Days: 1
                 StorageClass: INTELLIGENT_TIERING
 
   SQSQueuePolicy:
