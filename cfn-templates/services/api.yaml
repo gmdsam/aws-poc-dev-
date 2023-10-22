@@ -52,7 +52,7 @@ Resources:
   PutLambdaFunction:
     Type: "AWS::Lambda::Function"
     Properties:
-      Handler: "handler"
+      Handler: "app.handler"
       Role: !GetAtt LambdaExecutionRole.Arn
       FunctionName: PutLambdaFunction
       Runtime: python3.8
@@ -63,7 +63,7 @@ Resources:
   GetLambdaFunction:
     Type: "AWS::Lambda::Function"
     Properties:
-      Handler: "handler"
+      Handler: "app.handler"
       Role: !GetAtt LambdaExecutionRole.Arn
       FunctionName: GetLambdaFunction
       Runtime: python3.8

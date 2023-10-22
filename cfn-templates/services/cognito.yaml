@@ -23,7 +23,7 @@ Resources:
   StoreUserDetailsFunction:
     Type: "AWS::Lambda::Function"
     Properties:
-      Handler: "handler"
+      Handler: "app.handler"
       Role: !GetAtt LambdaExecutionRole.Arn
       FunctionName: StoreUserDetailsFunction
       Runtime: python3.8
