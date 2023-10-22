@@ -19,7 +19,7 @@ Resources:
     Properties:
       Name: CognitoUserDBConnection
       Description: Connection credentials for the Cognito user details RDS instance
-      SecretString: !Sub '{"username":"${DBUsername}", "password":"${DBPassword}"}'
+      SecretString: '{"username": "hardcoded_username", "password": "hardcoded_password"}'
 
   CognitoUserDB:
     Type: 'AWS::RDS::DBInstance'
