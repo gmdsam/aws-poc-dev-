@@ -49,7 +49,7 @@ Resources:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: Allow MySQL connections
-      VpcId: vpc-0f245264583b2d851 # Replace with your VPC ID
+      VpcId: vpc-0938e11b961748f12 # Replace with your VPC ID
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: '3306'
