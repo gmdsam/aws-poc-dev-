@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: RDS setup inside a VPC and storing connection credentials in Secrets Manager
 Resources:
-  # CognitoStack:
-  #   Type: AWS::CloudFormation::Stack
-  #   Properties:
-  #     TemplateURL: 's3://your-template-bucket-path/cognito.yaml'
+  CognitoStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: 's3://your-template-bucket-path/cognito.yaml'
 
   ApiStack:
     Type: AWS::CloudFormation::Stack
