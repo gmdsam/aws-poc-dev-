@@ -29,4 +29,4 @@ Resources:
   RDSStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: 's3://aws-dev-poc-bucket-stockholm/aws-associate-dev-poc/cfn-templates/services/rds.yaml'
+      TemplateURL: https://aws-dev-poc-bucket-stockholm.s3.eu-north-1.amazonaws.com/aws-associate-dev-poc/cfn-templates/services/rds.yaml
